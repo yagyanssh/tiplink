@@ -31,10 +31,11 @@ export function aesDecrypt(encryptedData: any) {
   const textParts = encryptedData.split(':')
   const iv = Buffer.from(textParts.shift(), 'hex')
   const encryptedText = Buffer.from(textParts.join(':'), 'hex')
+  const encryptionKey32 = crypto.createHash('sha256').update(Buffer.from(ENCRYPTION_KEY, 'hex')).digest();
 
   const decipher = crypto.createDecipheriv(
-    'aes-256-cbc',
-    Buffer.from(ENCRYPTION_KEY),
+    'aes-256-ctr',
+    encryptionKey32,
     iv,
   )
 
