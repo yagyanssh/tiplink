@@ -4,6 +4,8 @@ import { actions, ActionType } from './actions'
 import { ReceiveQR } from './ReceiveQR'
 import TokenSwap from './Swap/Swap'
 import SendToken from './Send/Send'
+import WithdrawalComponent from './withdraw/withdraw'
+
 
 export interface WalletDetailProps {
   wallet?: string
@@ -46,7 +48,7 @@ const WalletDetail = ({ wallet, usdbalance , solbalance}: WalletDetailProps) => 
           )}
         </div>
       </div>
-    {(currentAction !== 'send' && currentAction !== 'swap' ) &&
+    {(currentAction !== 'send' && currentAction !== 'swap' && currentAction !== 'withdraw' ) &&
       <div>
         <div className="flex flex-col items-center w-full gap-5">
           <div className="flex space-x-10 w-full items-center justify-between">
@@ -96,6 +98,7 @@ const WalletDetail = ({ wallet, usdbalance , solbalance}: WalletDetailProps) => 
       {currentAction === 'receive' && <ReceiveQR wallet={wallet} onClose={handleClose}/>}
       {currentAction === 'swap' &&  <TokenSwap setCurrent={setCurrentAction}/>}
       {currentAction === 'send' && <SendToken  setCurrent={setCurrentAction}/>}
+      {currentAction === 'withdraw' && <WithdrawalComponent setCurrent={setCurrentAction} onClose={handleClose}/>}
 
     </div>
   )
