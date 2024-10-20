@@ -4,11 +4,9 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import { withdrawSol } from '@/services/walletService'
 import { ChevronRight, Wallet } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { PublicKey } from '@solana/web3.js'
 import { useConnection } from '@solana/wallet-adapter-react'
 
 
-// WithdrawalOption Component (to choose the withdrawal method)
 interface WithdrawalOptionProps {
   icon: React.ReactNode
   title: string
@@ -37,7 +35,6 @@ const WithdrawalOption: React.FC<WithdrawalOptionProps> = ({
   </button>
 )
 
-// WalletWithdrawalForm Component (to handle wallet withdrawal form)
 interface WalletWithdrawalFormProps {
   onCancel: () => void
 }
@@ -48,8 +45,9 @@ const WalletWithdrawalForm: React.FC<WalletWithdrawalFormProps> = ({
   const [amount, setAmount] = useState<string>('')
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null);
   const { publicKey } = useWallet()
-  const { connection } = useConnection()
+  // const { connection } = useConnection()
 
   const handleWithdraw = async () => {
     if (!publicKey) {
@@ -63,11 +61,12 @@ const WalletWithdrawalForm: React.FC<WalletWithdrawalFormProps> = ({
     }
     setIsLoading(true)
     setError(null)
+    setSuccess(null)
 
     try {
       const signature = await withdrawSol(publicKey, amountNum)
       console.log('Withraw Successful:', signature)
-      // TODO a success message for the user - implement before raising PR
+      setSuccess(`Withdrawal successful! Transaction Signature: ${signature}`);
     } catch (error) {
       console.log('Withdrawal Failed:', error)
       setError('Withdrawl failed. Please try again.')
@@ -92,7 +91,7 @@ const WalletWithdrawalForm: React.FC<WalletWithdrawalFormProps> = ({
         <div className="relative flex items-center">
           <input
             type="text"
-            placeholder="$ 0 USD"
+            placeholder="SOL"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
             className="w-full px-4 py-3 border border-gray-300 rounded-md text-xl text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
